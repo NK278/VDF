@@ -38,5 +38,5 @@ foreach keyword $keywords {
 }
 
 #NOTE: for running the file , you should use the below commands.
-#for testcase verilog file 1        :tclsh pankaj1.tcl test1.v
-#for testcase verilog file 2        :tclsh pankaj2.tcl test1.v
+#for testcase verilog file 1        :tclsh main.tcl test1.v
+#for testcase verilog file 2        :tclsh main.tcl test2.v
