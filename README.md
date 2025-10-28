@@ -58,6 +58,6 @@ Each assignment in this repository focuses on a specific stage of this flow, aim
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/<your-username>/VDF.git](https://github.com/NK278/VDF#)
+   git clone https://github.com/NK278/VDF.git
    cd VDF
 
