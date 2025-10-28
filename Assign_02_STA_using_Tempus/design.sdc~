@@ -1,0 +1,13 @@
+
+create_clock -name clk -period 7.5 [get_ports clk]
+
+set_input_delay  2 -clock clk [get_ports {a b}]
+
+set_output_delay 2 -clock clk [get_ports out]
+set_multicycle_path 4 -setup -from [get_clocks clk] -to [get_clocks clk]
+set_multicycle_path 3 -hold -from [get_clocks clk] -to [get_clocks clk]
+set_drive 0 [get_ports {a b clk}]
+
+set_load 0.1 [get_ports out]
+
+

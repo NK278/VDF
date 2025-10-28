@@ -1,0 +1,50 @@
+// Synth netlist (structural) matching the diagram
+`timescale 1ns / 1ps
+
+module syn_netlist_top (
+    input  wire a,
+    input  wire b,
+    input  wire clk,
+    output wire out
+);
+
+    // Internal nets
+    wire a_n1;        // output of N1
+    wire clk_c1;      // after C1
+    wire clk_del;     // after C2 (delayed clock)
+    wire q1_q;        // q1_reg Q
+    wire q2_q;        // q2_reg Q
+    wire q2_q_n;      // inverted q2_q (N2)
+    wire a1_out;      // output of OR gate A1 (D for out_reg)
+    wire out_q;       // out_reg Q
+    // (optionally you can tie reset/preset pins if your DFF cell requires them)
+
+    // ----- Clock inverters (C1, C2) -----
+    // clk -> C1 -> clk_c1 -> C2 -> clk_del
+    INVX1 u_C1 ( .A(clk),     .Y(clk_c1) );
+    INVX1 u_C2 ( .A(clk_c1),  .Y(clk_del) );
+
+    // ----- Input inverter N1 for 'a' -----
+    INVX1 u_N1 ( .A(a), .Y(a_n1) );
+
+    // ----- D flip-flops (positive-edge) -----
+    // q1_reg captures a_n1 on rising edge of clk_del
+    DFFX1 u_q1_reg ( .D(a_n1), .CK(clk_del), .Q(q1_q) );
+
+    // q2_reg captures b on rising edge of clk_del
+    DFFX1 u_q2_reg ( .D(b), .CK(clk_del), .Q(q2_q) );
+
+    // out_reg captures combinational A1 result on rising edge of clk (main clock)
+    DFFX1 u_out_reg ( .D(a1_out), .CK(clk), .Q(out_q) );
+
+    // ----- Inverter N2 (inverts q2_q before OR) -----
+    INVX1 u_N2 ( .A(q2_q), .Y(q2_q_n) );
+
+    // ----- OR gate A1 (q1_q OR (not q2_q)) -----
+    OR2X1 u_A1 ( .A(q1_q), .B(q2_q_n), .Y(a1_out) );
+
+    // ----- Output inverter N3 -----
+    INVX1 u_N3 ( .A(out_q), .Y(out) );
+
+endmodule
+
